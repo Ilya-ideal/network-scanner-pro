@@ -1,0 +1,7 @@
+Flask==2.3.2
+python-nmap==0.7.1
+netifaces2
+requests==2.31.0
+APScheduler==3.10.4
+python-dotenv==1.0.0
+pywin32==311

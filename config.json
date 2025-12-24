@@ -1,0 +1,36 @@
+{
+    "network": {
+        "cidr": "10.0.9.0/24",
+        "interface": "eth0",
+        "scan_timeout": "30s"
+    },
+    "server": {
+        "host": "10.0.9.62",
+        "port": 8000,
+        "debug": false,
+        "auth_enabled": false,
+        "allow_hosts": ["10.0.9.0/24"]  # Разрешаем доступ только из локальной сети
+    },
+    "scanner": {
+        "scan_interval": 300,
+        "auto_scan": true,
+        "nmap_options": "-sn -T4 --max-retries 1 --host-timeout 30s",
+        "resolve_hostnames": true,
+        "detect_vendors": true,
+        "exclude_self": true,  # Исключить свой IP 10.0.9.62 из сканирования
+        "exclude_ips": ["10.0.9.1", "10.0.9.254"]  # Шлюз и broadcast
+    },
+    "database": {
+        "type": "sqlite",
+        "path": "/opt/network-scanner/data/network.db",
+        "backup_enabled": true,
+        "backup_interval_hours": 24,
+        "backup_path": "/opt/network-scanner/backups"
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "/opt/network-scanner/logs/scanner.log",
+        "max_size_mb": 10,
+        "backup_count": 5
+    }
+}

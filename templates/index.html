@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Scanner - 10.0.9.0/24</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-network-wired"></i> Network Scanner для Windows</h1>
+            <div class="network-info">
+                <span>Сеть: 10.0.9.0/24</span>
+                <span id="lastUpdate">Последнее обновление: --:--:--</span>
+            </div>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <i class="fas fa-server"></i>
+                <div>
+                    <h3>Всего устройств</h3>
+                    <p id="totalDevices">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-wifi"></i>
+                <div>
+                    <h3>Онлайн</h3>
+                    <p id="onlineDevices">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-plug"></i>
+                <div>
+                    <h3>Оффлайн</h3>
+                    <p id="offlineDevices">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-sync-alt"></i>
+                <div>
+                    <h3>DHCP</h3>
+                    <p id="dhcpDevices">0</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button onclick="scanNetwork()" class="btn primary">
+                <i class="fas fa-search"></i> Сканировать сеть
+            </button>
+            <button onclick="exportCSV()" class="btn secondary">
+                <i class="fas fa-download"></i> Экспорт CSV
+            </button>
+            <button onclick="refreshData()" class="btn">
+                <i class="fas fa-redo"></i> Обновить
+            </button>
+            <div class="search">
+                <input type="text" id="searchInput" placeholder="Поиск по IP или имени...">
+                <i class="fas fa-search"></i>
+            </div>
+            <button class="btn btn-info" onclick="showFreeIPs()">
+                <i class="fas fa-list-ol"></i> Свободные IP
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>IP Адрес</th>
+                        <th>Имя</th>
+                        <th>MAC Адрес</th>
+                        <th>Производитель</th>
+                        <th>Статус</th>
+                        <th>Последний раз видели</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="hostsTable">
+                    <tr>
+                        <td colspan="7" class="loading">
+                            <i class="fas fa-spinner fa-spin"></i> Загрузка данных...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <footer>
+            <p>Network Scanner Pro для Windows | Автообновление каждые 60 секунд</p>
+        </footer>
+    </div>
+    
+    <script src="/static/js/app.js"></script>
+    
+    <div class="modal" id="freeIpsModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-list-ol"></i> Свободные IP-адреса</h3>
+                <button class="close" onclick="closeFreeIpsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="controls" style="margin-bottom: 20px;">
+                    <div class="input-group">
+                        <label>Диапазон сети:</label>
+                        <input type="text" id="networkRange" value="10.0.9.0/24" style="flex-grow: 1;">
+                        <button onclick="loadFreeIPs()" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Найти свободные
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stats-row" id="freeIpsStats" style="display: none;">
+                    <div class="stat-card">
+                        <h4>Всего IP</h4>
+                        <p id="totalIPs">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Занято</h4>
+                        <p id="usedIPs" style="color: #e74c3c;">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Свободно</h4>
+                        <p id="freeIPsCount" style="color: #27ae60;">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>% свободных</h4>
+                        <p id="freeIPsPercent">0%</p>
+                    </div>
+                </div>
+                
+                <div class="free-ips-list" id="freeIpsListContainer">
+                    <h4>Список свободных адресов:</h4>
+                    <div id="freeIpsList" class="ips-grid">
+                        <!-- IP будут загружены здесь -->
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="exportFreeIPsCSV()">
+                        <i class="fas fa-download"></i> Экспорт CSV
+                    </button>
+                    <button class="btn" onclick="closeFreeIpsModal()">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

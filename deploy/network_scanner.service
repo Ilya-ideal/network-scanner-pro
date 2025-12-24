@@ -1,0 +1,39 @@
+[Unit]
+Description=Network Scanner Pro Service
+After=network.target
+After=nginx.service
+Wants=network.target
+Requires=nginx.service
+
+[Service]
+Type=simple
+User=network-scanner
+Group=network-scanner
+WorkingDirectory=/opt/network-scanner
+Environment="PATH=/opt/network-scanner/venv/bin"
+Environment="PYTHONPATH=/opt/network-scanner"
+Environment="FLASK_APP=network_scanner.py"
+Environment="FLASK_ENV=production"
+
+# Основная команда запуска
+ExecStart=/opt/network-scanner/venv/bin/python network_scanner.py
+
+# Перезагрузка при сбоях
+Restart=on-failure
+RestartSec=5s
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# Безопасность
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/network-scanner/data /opt/network-scanner/logs
+
+# Логирование
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=network-scanner
+
+[Install]
+WantedBy=multi-user.target
